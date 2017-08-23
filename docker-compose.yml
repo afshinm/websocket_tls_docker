@@ -1,0 +1,34 @@
+version: "2"
+
+services:
+  nginx-proxy:
+    restart: always
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/tmp/docker.sock:ro"
+      - "./certs:/etc/nginx/certs"
+
+  ws.example.com:
+    restart: always
+    image: sample-ws
+    build: ./samples/server
+    container_name: ws.example.com
+    depends_on:
+      - "nginx-proxy"
+    environment:
+      - VIRTUAL_HOST=ws.example.com
+      - VIRTUAL_NETWORK=nginx-proxy
+      - VIRTUAL_PORT=3000
+
+  ws.client:
+    restart: always
+    network_mode: host
+    image: ws-client
+    build: ./samples/client
+    container_name: ws.client
+    depends_on:
+      - "ws.example.com"

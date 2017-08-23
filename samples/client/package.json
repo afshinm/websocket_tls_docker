@@ -1,0 +1,9 @@
+{
+  "name": "sample-client",
+  "version": "1.0.0",
+  "main": "app.js",
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^3.1.0"
+  }
+}
